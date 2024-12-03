@@ -62,7 +62,6 @@ fn get_distance(first_array: Vec<i32>, second_array: Vec<i32>) -> i32 {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use test_case::test_case;
 
     #[test]
     fn test_run_one() {

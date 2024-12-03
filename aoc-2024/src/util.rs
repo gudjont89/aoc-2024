@@ -19,6 +19,15 @@ pub fn read_from_file(is_real: bool, day: u32, order: Option<u32>) -> Vec<String
     input.lines().map(|s| s.to_string()).collect()
 }
 
+pub fn read_from_file_and_combine_strings(is_real: bool, day: u32, order: Option<u32>) -> String {
+    let lines = read_from_file(is_real, day, order);
+
+    lines.iter().fold(String::new(), |mut acc, s| {
+        acc.push_str(s);
+        acc
+    })
+}
+
 pub fn get_integers_in_string(s: &str) -> Vec<i32> {
     let rgx = regex::Regex::new(r"\d+").unwrap();
 
