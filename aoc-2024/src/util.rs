@@ -18,3 +18,9 @@ pub fn read_from_file(is_real: bool, day: u32, order: Option<u32>) -> Vec<String
     
     input.lines().map(|s| s.to_string()).collect()
 }
+
+pub fn get_integers_in_string(s: &str) -> Vec<i32> {
+    let rgx = regex::Regex::new(r"\d+").unwrap();
+
+    rgx.find_iter(s).map(|m| m.as_str().parse::<i32>().unwrap()).collect()
+}

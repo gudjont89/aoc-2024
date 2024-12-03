@@ -1,6 +1,6 @@
 use crate::util::*;
 
-pub fn run_one(is_real: bool) -> i32 {
+pub fn run_first(is_real: bool) -> i32 {
     let lines = read_from_file(is_real, 2, None);
 
     lines
@@ -9,7 +9,7 @@ pub fn run_one(is_real: bool) -> i32 {
         .count() as i32
 }
 
-pub fn run_two(is_real: bool) -> i32 {
+pub fn run_second(is_real: bool) -> i32 {
     let lines = read_from_file(is_real, 2, None);
 
     lines
@@ -19,12 +19,6 @@ pub fn run_two(is_real: bool) -> i32 {
             .any(|x| is_valid(x))
         )
         .count() as i32
-}
-
-fn get_integers_in_string(s: &str) -> Vec<i32> {
-    let rgx = regex::Regex::new(r"\d+").unwrap();
-
-    rgx.find_iter(s).map(|m| m.as_str().parse::<i32>().unwrap()).collect()
 }
 
 fn is_valid(array: &[i32]) -> bool {
@@ -113,11 +107,16 @@ mod tests {
 
     #[test]
     fn test_run_one() {
-        assert_eq!(run_one(false), 2);
+        assert_eq!(run_first(false), 2);
+    }
+
+    #[test]
+    fn real_run_one() {
+        assert_eq!(run_first(true), 332);
     }
 
     #[test]
     fn test_run_two() {
-        assert_eq!(run_two(false), 4);
+        assert_eq!(run_second(false), 4);
     }
 }
