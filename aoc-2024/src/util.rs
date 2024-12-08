@@ -63,8 +63,8 @@ impl Position {
 }
 
 pub struct Separation {
-    dx: i32,
-    dy: i32,
+    pub dx: i32,
+    pub dy: i32,
 }
 
 impl Separation {
@@ -73,7 +73,7 @@ impl Separation {
     }
 }
 
-pub fn position_map_from_text_lines<T>(
+pub fn position_map_from_text_lines<T> (
     lines: &[String], 
     parse_from_char: fn(char) -> T
 ) -> HashMap<Position, T> {
@@ -92,6 +92,29 @@ pub fn position_map_from_text_lines<T>(
 
             acc
         })
+}
+
+pub fn position_and_object_from_text_lines<T> (
+    lines: &[String], 
+    parse_from_char: fn(char) -> Option<T>
+) -> Option<(Position, T)> {
+    lines
+        .iter()
+        .enumerate()
+        .flat_map(|(y, line)|
+            line
+                .chars()
+                .enumerate()
+                .filter_map(|(x, c)| {
+                    let o = parse_from_char(c)?;
+                    let position = Position { x, y };
+
+                    Some((position, o))
+                    }
+                )
+                .collect::<Vec<(Position, T)>>()
+        )
+        .next()
 }
 
 #[derive(Debug)]

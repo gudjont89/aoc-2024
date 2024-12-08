@@ -1,3 +1,5 @@
+use std::time::Instant;
+
 mod dec_01;
 mod dec_02;
 mod dec_03;
@@ -30,15 +32,18 @@ fn main() {
     // println!("Part 1: {}", dec_05::run_first(true));
     // println!("Part 2: {}", dec_05::run_second(true));
 
-    // println!("December 6th");
-    // println!("Part 1: {}", dec_06::run_first(true));
-    // println!("Part 2: {}", dec_06::run_second(true));
+    println!("December 6th");
+    println!("Part 1: {}", dec_06::run_first(true));
+    let start = Instant::now();
+    println!("Part 2: {}", dec_06::run_second(true));
+    let duration = start.elapsed();
+    println!("Time elapsed in part 2 is: {:?}", duration);
 
     // println!("December 7th");
     // println!("Part 1: {}", dec_07::run_first(true));
     // println!("Part 2: {}", dec_07::run_second(true));
 
-    println!("December 8th");
-    println!("Part 1: {}", dec_08::run_first(true));
-    // println!("Part 2: {}", dec_07::run_second(true));
+    // println!("December 8th");
+    // println!("Part 1: {}", dec_08::run_first(true));
+    // println!("Part 2: {}", dec_08::run_second(true));
 }
