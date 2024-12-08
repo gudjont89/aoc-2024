@@ -11,7 +11,7 @@ pub fn run_first(is_real: bool) -> i32 {
     let mut positions = vec![guard.position];
 
     // todo: I would like to do this with an iterator
-    while let Some(guard_on_map) = guard.get_next(&location_map) {
+    while let Some(guard_on_map) = guard.get_next(&location_map, None) {
         positions.push(guard_on_map.position);
         guard = guard_on_map;
     }
@@ -25,25 +25,22 @@ pub fn run_second(is_real: bool) -> i32 {
     let (location_map, initial_guard) = LocationMap::new(&lines);
 
     let mut guard = initial_guard.clone();
-    let mut previous_guards = vec![guard];
     let mut loop_obstructions = 0;
-
-    // // Backtrack to the edge of the map or an obstruction
-    // while let Some(guard_on_map) = guard.get_last(&location_map) {
-    //     previous_guards.push(guard_on_map.clone());
-    //     guard = guard_on_map;
-    // }
 
     guard = initial_guard;
 
-    while let Some(guard_on_map) = guard.get_next(&location_map) {
-        // todo: instead of backtracking, we should turn right and then carry on for as long as we can, and see if the previous guards include that value
-        if previous_guards.contains(&guard_on_map.turn_right_and_go_straight(&location_map)) {
+    while let Some(guard_on_map) = guard.get_next(&location_map, None) {
+        println!("Guard: {:?}", guard_on_map);
+        guard = guard_on_map;
+
+        let next_square = match guard.forward_if_possible(&location_map) {
+            Some(g) => g.position,
+            None => continue, // todo: this is OK, right?
+        };
+
+        if !(guard.eventually_leaves_map(&location_map, next_square)) {
             loop_obstructions = loop_obstructions + 1;
         }
-
-        previous_guards.push(guard_on_map.clone());
-        guard = guard_on_map;
     }
 
     loop_obstructions
@@ -100,7 +97,7 @@ impl LocationMap {
     }
 }
 
-#[derive(Clone, Copy, PartialEq)]
+#[derive(Clone, Copy, PartialEq, Debug)]
 enum Direction {
     N,
     E,
@@ -139,18 +136,28 @@ impl Direction {
     }
 }
 
-#[derive(Clone, Copy, PartialEq)]
+#[derive(Clone, Copy, PartialEq, Debug)]
 struct Guard {
     position: (usize, usize),
     bearing: Direction,
 }
 
 impl Guard {
-    fn get_next(&self, location_map: &LocationMap) -> Option<Guard> {
+    fn get_next(
+        &self, 
+        location_map: &LocationMap,
+        maybe_additional_obstruction: Option<(usize, usize)>,
+    ) -> Option<Guard> {
         let (x0, y0) = self.position;
         let (dx, dy) = self.bearing.get_movement();
 
         let next_square = ((x0 as i32 + dx) as usize, (y0 as i32 + dy) as usize);
+
+        if let Some(additional_obstruction) = maybe_additional_obstruction {
+            if next_square == additional_obstruction {
+                return Some( Guard { position: self.position, bearing: self.bearing.turn_right() } );
+            }
+        }
 
         // If we don't find square, it's out of bounds
         match location_map.location_map.get(&next_square)? {
@@ -159,22 +166,33 @@ impl Guard {
         }
     }
 
-    // fn get_last(&self, location_map: &LocationMap) -> Option<Guard> {
-    //     let (x0, y0) = self.position;
-    //     let (dx, dy) = self.bearing.get_movement();
+    fn eventually_leaves_map(
+        &self, 
+        location_map: &LocationMap,
+        new_obstruction_square: (usize, usize),
+    ) -> bool {
+        let mut guard = self.clone();
+        let mut guard_history = vec![guard.clone()];
 
-    //     let last_square = ((x0 as i32 - dx) as usize, (y0 as i32 - dy) as usize);
+        while let Some(guard_on_map) = guard.get_next(
+            &location_map, 
+            Some(new_obstruction_square)
+        ) {
+            if guard_history.contains(&guard_on_map) {
+                return false;
+            }
 
-    //     match location_map.location_map.get(&last_square)? {
-    //         Location::Obstruction => None,
-    //         Location::Free => Some( Guard { position: last_square, bearing: self.bearing } ),
-    //     }
-    // }
+            guard_history.push(guard_on_map);
+            guard = guard_on_map;
+        }
+
+        true
+    }
 
     fn turn_right_and_go_straight(&self, location_map: &LocationMap) -> Guard {
         let mut guard = self.turn_right();
 
-        while let Some(walking_guard) = self.forward_if_possible(location_map) {
+        while let Some(walking_guard) = guard.forward_if_possible(location_map) {
             guard = walking_guard;
         }
 
@@ -189,28 +207,16 @@ impl Guard {
         let (x0, y0) = self.position;
         let (dx, dy) = self.bearing.get_movement();
 
-        let next_square = ((x0 as i32 + dx) as usize, (y0 as i32 + dy) as usize);
+        let next_square = (
+            (x0 as i32 + dx) as usize, 
+            (y0 as i32 + dy) as usize,
+        );
 
         match location_map.location_map.get(&next_square)? {
             Location::Obstruction => None,
             Location::Free => Some( Guard { position: next_square, bearing: self.bearing }),
         }
     }
-
-    // // todo: this might not be enough, what if this movement causes a turn that will later lead us to retracing our steps?
-    // //       this might be an edge case, though. Maybe we should start by backtracking all the way to the edge of the map or an obstruction
-    // fn turn_right_and_move(&self, location_map: &LocationMap) -> Option<Guard> {
-    //     // let (x0, y0) = self.position;
-    //     // let (dx1, dy1) = self.bearing.get_movement();
-    //     // let (dx2, dy2) = self.bearing.turn_right().get_movement();
-
-    //     // let new_square = ((x0 as i32 + dx1 + dx2) as usize, (y0 as i32 + dy1 + dy2) as usize);
-
-    //     // match location_map.location_map.get(&new_square)? {
-    //     //     Location::Obstruction => None, // todo: maybe we should interpret this as an obstruction
-    //     //     Location::Free => Some( Guard { position: new_square, bearing: self.bearing.turn_right() }),
-    //     // }
-    // }
 }
 
 #[cfg(test)]
