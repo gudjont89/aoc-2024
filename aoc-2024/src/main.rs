@@ -34,6 +34,6 @@ fn main() {
     // println!("Part 2: {}", dec_06::run_second(true));
 
     println!("December 7th");
-    println!("Part 1: {}", dec_07::run_first(true));
-    // println!("Part 2: {}", dec_07::run_second(true));
+    // println!("Part 1: {}", dec_07::run_first(true));
+    println!("Part 2: {}", dec_07::run_second(true));
 }
