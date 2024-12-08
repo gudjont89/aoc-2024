@@ -5,6 +5,7 @@ mod dec_04;
 mod dec_05;
 mod dec_06;
 mod dec_07;
+mod dec_08;
 
 mod util;
 
@@ -33,7 +34,11 @@ fn main() {
     // println!("Part 1: {}", dec_06::run_first(true));
     // println!("Part 2: {}", dec_06::run_second(true));
 
-    println!("December 7th");
+    // println!("December 7th");
     // println!("Part 1: {}", dec_07::run_first(true));
-    println!("Part 2: {}", dec_07::run_second(true));
+    // println!("Part 2: {}", dec_07::run_second(true));
+
+    println!("December 8th");
+    println!("Part 1: {}", dec_08::run_first(true));
+    // println!("Part 2: {}", dec_07::run_second(true));
 }
