@@ -40,7 +40,15 @@ pub fn run_second(is_real: bool) -> i32 {
 
     let (location_map, initial_guard) = LocationMap::new(&lines);
 
-    
+    // let three_obstruction_candidates: Vec<Guard> = Vec::new();
+    // let four_obstruction_candidates = Vec::new();
+
+    let three_obstruction_candidates = location_map.location_map
+        .iter()
+        .filter(|(k, v)| v.is_free())
+        .flat_map(|(k, _)| k.guards_moving_from_obstruction())
+        ;
+
 
     0
 }
@@ -95,6 +103,20 @@ impl Location {
             _ => panic!("Invalid char: {}", c),
         }
     }
+
+    fn is_obstruction(&self) -> bool {
+        match self {
+            Location::Obstruction => true,
+            Location::Free => false,
+        }
+    }
+
+    fn is_free(&self) -> bool {
+        match self {
+            Location::Obstruction => false,
+            Location::Free => true,
+        }
+    }
 }
 
 #[derive(Clone, Copy, PartialEq, Debug, Eq, Hash)]
@@ -116,6 +138,44 @@ impl Position {
             x: ((self.x as i32) + movement.dx) as usize, 
             y: ((self.y as i32) + movement.dy) as usize, 
         })
+    }
+
+    fn on_top_of(&self) -> Option<Self> {
+        self.move_by(Direction::N.get_movement())
+    }
+
+    fn to_the_right(&self) -> Option<Self> {
+        self.move_by(Direction::E.get_movement())
+    }
+
+    fn underneath(&self) -> Option<Self> {
+        self.move_by(Direction::S.get_movement())
+    }
+
+    fn to_the_left(&self) -> Option<Self> {
+        self.move_by(Direction::W.get_movement())
+    }
+
+    fn guards_moving_from_obstruction(&self) -> Vec<Guard> {
+        let mut guards = Vec::new();
+
+        if let Some(on_top_of) = self.on_top_of() {
+            guards.push(Guard { position: on_top_of, bearing: Direction::W });
+        }
+        
+        if let Some(to_the_right) = self.to_the_right() {
+            guards.push(Guard { position: to_the_right, bearing: Direction::N });
+        }
+
+        if let Some(underneath) = self.underneath() {
+            guards.push(Guard { position: underneath, bearing: Direction::E });
+        }
+
+        if let Some(to_the_left) = self.to_the_left() {
+            guards.push(Guard { position: to_the_left, bearing: Direction::S });
+        }
+
+        guards
     }
 }
 
