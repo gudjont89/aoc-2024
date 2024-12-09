@@ -5,7 +5,7 @@ pub fn run_first(is_real: bool) -> i32 {
         true => None,
         false => Some(1),
     };
-    let all_text = read_from_file_and_combine_strings(is_real, 3, order);
+    let all_text = read_single_string_from_file(is_real, 3, order);
     
     find_multiplications(&all_text)
 }
@@ -15,7 +15,7 @@ pub fn run_second(is_real: bool) -> i32 {
         true => None,
         false => Some(2),
     };
-    let all_text = read_from_file_and_combine_strings(is_real, 3, order);
+    let all_text = read_single_string_from_file(is_real, 3, order);
 
     find_multiplication_strings(&all_text)
 }

@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-
 use itertools::Itertools;
 
 use crate::util::{get_position_map_dimensions, position_map_from_text_lines, positions_on_map_with_value, read_from_file, Dimensions, Position};
@@ -147,7 +145,6 @@ impl AntennaCouple {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use test_case::test_case;
 
     #[test]
     fn test_run_first() {

@@ -29,6 +29,7 @@ const SECOND_LETTER: char = 'M';
 const THIRD_LETTER: char = 'A';
 const FOURTH_LETTER: char = 'S';
 
+// todo: use LocationMap from util.rs
 struct LetterMap {
     letter_map: HashMap<(usize, usize), char>,
     width: usize,

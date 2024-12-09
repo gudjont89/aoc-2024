@@ -1,6 +1,12 @@
 use std::collections::HashMap;
 
 pub fn read_from_file(is_real: bool, day: u32, order: Option<u32>) -> Vec<String> {
+    let input = read_single_string_from_file(is_real, day, order);
+    
+    input.lines().map(|s| s.to_string()).collect()
+}
+
+pub fn read_single_string_from_file(is_real: bool, day: u32, order: Option<u32>) -> String {
     let suffix = match order {
         Some(o) => format!("_{}", o),
         None => "".to_string()
@@ -17,17 +23,8 @@ pub fn read_from_file(is_real: bool, day: u32, order: Option<u32>) -> Vec<String
 
     let data_file = source_folder.join(date_folder).join(data_file);
     let input = std::fs::read_to_string(data_file).expect("Failed to read file");
-    
-    input.lines().map(|s| s.to_string()).collect()
-}
 
-pub fn read_from_file_and_combine_strings(is_real: bool, day: u32, order: Option<u32>) -> String {
-    let lines = read_from_file(is_real, day, order);
-
-    lines.iter().fold(String::new(), |mut acc, s| {
-        acc.push_str(s);
-        acc
-    })
+    input
 }
 
 pub fn get_integers_in_string(s: &str) -> Vec<i32> {
