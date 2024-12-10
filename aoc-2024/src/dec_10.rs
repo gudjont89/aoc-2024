@@ -18,7 +18,16 @@ pub fn run_first(is_real: bool) -> usize {
 }
 
 pub fn run_second(is_real: bool) -> usize {
-    0
+    let lines = read_from_file(is_real, 10, None);
+    let parse_from_char= |c: char| c.to_digit(10).unwrap() as usize;
+    let trail_map = position_map_from_text_lines(&lines, parse_from_char);
+
+    trail_map
+        .iter()
+        .filter(|(_, h)| **h == TRAILHEAD_HEIGHT)
+        .map(|(p, _)| Trailhead::new(&trail_map, *p) )
+        .map(|th| th.calculate_rating())
+        .sum::<usize>()
 }
 
 const TRAILHEAD_HEIGHT: usize = 0;
@@ -37,6 +46,13 @@ impl Trailhead {
     }
 
     fn calculate_score(&self) -> usize {
+        self.tile.transition_type.summit_positions()
+            .iter()
+            .unique()
+            .count()
+    }
+
+    fn calculate_rating(&self) -> usize {
         self.tile.transition_type.summit_positions()
             .iter()
             .count()
@@ -107,7 +123,6 @@ impl TransitionType {
                 child_tiles
                     .iter()
                     .flat_map(|ct| ct.transition_type.summit_positions())
-                    .unique()
                     .collect::<Vec<Position>>()
             },
         }
@@ -123,13 +138,18 @@ mod tests {
         assert_eq!(run_first(false), 36);
     }
 
-    // #[test]
-    // fn real_run_first() {
-    //     assert_eq!(run_first(true), tbd);
-    // }
+    #[test]
+    fn real_run_first() {
+        assert_eq!(run_first(true), 557);
+    }
 
-    // #[test]
-    // fn test_run_second() {
-    //     assert_eq!(run_second(false), tbd);
-    // }
+    #[test]
+    fn test_run_second() {
+        assert_eq!(run_second(false), 81);
+    }
+
+    #[test]
+    fn real_run_second() {
+        assert_eq!(run_second(true), 1062);
+    }
 }
