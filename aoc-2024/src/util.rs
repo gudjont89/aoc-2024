@@ -73,9 +73,13 @@ impl Separation {
 #[derive(Clone, Copy, PartialEq, Debug)]
 pub enum Direction {
     N,
+    NE,
     E,
+    SE,
     S,
+    SW,
     W,
+    NW,
 }
 
 impl Direction {
@@ -93,9 +97,13 @@ impl Direction {
     pub fn get_movement(&self) -> Separation {
         match self {
             Direction::N => Separation { dx: 0, dy: -1 },
+            Direction::NE => Separation { dx: 1, dy: -1 },
             Direction::E => Separation { dx: 1, dy: 0 },
+            Direction::SE => Separation { dx: 1, dy: 1 },
             Direction::S => Separation { dx: 0, dy: 1 },
+            Direction::SW => Separation { dx: -1, dy: 1 },
             Direction::W => Separation { dx: -1, dy: 0 },
+            Direction::NW => Separation { dx: -1, dy: -1 },
         }
     }
 
@@ -105,6 +113,7 @@ impl Direction {
             Direction::E => Direction::S,
             Direction::S => Direction::W,
             Direction::W => Direction::N,
+            _ => panic!(""),
         }
     }
 
@@ -114,6 +123,16 @@ impl Direction {
             Direction::E => Direction::W,
             Direction::S => Direction::N,
             Direction::W => Direction::E,
+            _ => panic!(""),
+        }
+    }
+
+    pub fn get_total_movement(&self, order: usize) -> Separation {
+        let single_separation = self.get_movement();
+
+        Separation{ 
+            dx: order as i32 * single_separation.dx, 
+            dy: order as i32 * single_separation.dy, 
         }
     }
 }
@@ -124,6 +143,19 @@ pub fn cardinal_directions() -> Vec<Direction> {
         Direction::E, 
         Direction::S, 
         Direction::W,
+    ]
+}
+
+pub fn ordinal_directions() -> Vec<Direction> {
+    vec![
+        Direction::N, 
+        Direction::NE, 
+        Direction::E, 
+        Direction::SE, 
+        Direction::S, 
+        Direction::SW, 
+        Direction::W, 
+        Direction::NW
     ]
 }
 

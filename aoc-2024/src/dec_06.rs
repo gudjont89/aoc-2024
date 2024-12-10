@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use itertools::Itertools;
 
-use crate::util::{position_and_object_from_text_lines, position_map_from_text_lines, positions_on_map_with_value, read_from_file, Direction, Position, Separation};
+use crate::util::{position_and_object_from_text_lines, position_map_from_text_lines, positions_on_map_with_value, read_from_file, Direction, Position};
 
 pub fn run_first(is_real: bool) -> usize {
     let lines = read_from_file(is_real, 6, None);
