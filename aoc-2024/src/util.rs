@@ -70,6 +70,65 @@ impl Separation {
     }
 }
 
+#[derive(Clone, Copy, PartialEq, Debug)]
+pub enum Direction {
+    N,
+    E,
+    S,
+    W,
+}
+
+impl Direction {
+    pub fn from_char(c: char) -> Option<Self> {
+        match c {
+            '#'|'.' => None,
+            '^' => Some(Direction::N),
+            '>' => Some(Direction::E),
+            'v' => Some(Direction::S),
+            '<' => Some(Direction::W),
+            _ => panic!("Invalid char: {}", c),
+        }
+    }
+
+    pub fn get_movement(&self) -> Separation {
+        match self {
+            Direction::N => Separation { dx: 0, dy: -1 },
+            Direction::E => Separation { dx: 1, dy: 0 },
+            Direction::S => Separation { dx: 0, dy: 1 },
+            Direction::W => Separation { dx: -1, dy: 0 },
+        }
+    }
+
+    pub fn turn_right(&self) -> Self {
+        match self {
+            Direction::N => Direction::E,
+            Direction::E => Direction::S,
+            Direction::S => Direction::W,
+            Direction::W => Direction::N,
+        }
+    }
+
+    pub fn reverse(&self) -> Self {
+        match self {
+            Direction::N => Direction::S,
+            Direction::E => Direction::W,
+            Direction::S => Direction::N,
+            Direction::W => Direction::E,
+        }
+    }
+}
+
+pub fn cardinal_directions() -> Vec<Direction> {
+    vec![
+        Direction::N, 
+        Direction::E, 
+        Direction::S, 
+        Direction::W,
+    ]
+}
+
+// todo: add function for ordinal_directions
+
 pub fn position_map_from_text_lines<T> (
     lines: &[String], 
     parse_from_char: fn(char) -> T

@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use itertools::Itertools;
 
-use crate::util::{position_and_object_from_text_lines, position_map_from_text_lines, positions_on_map_with_value, read_from_file, Position, Separation};
+use crate::util::{position_and_object_from_text_lines, position_map_from_text_lines, positions_on_map_with_value, read_from_file, Direction, Position, Separation};
 
 pub fn run_first(is_real: bool) -> usize {
     let lines = read_from_file(is_real, 6, None);
@@ -86,45 +86,6 @@ impl Location {
             '#' => Location::Obstruction,
             '.'|'>'|'<'|'^'|'v' => Location::Free,
             _ => panic!("Invalid char: {}", c),
-        }
-    }
-}
-
-#[derive(Clone, Copy, PartialEq, Debug)]
-enum Direction {
-    N,
-    E,
-    S,
-    W,
-}
-
-impl Direction {
-    fn from_char(c: char) -> Option<Self> {
-        match c {
-            '#'|'.' => None,
-            '^' => Some(Direction::N),
-            '>' => Some(Direction::E),
-            'v' => Some(Direction::S),
-            '<' => Some(Direction::W),
-            _ => panic!("Invalid char: {}", c),
-        }
-    }
-
-    fn get_movement(&self) -> Separation {
-        match self {
-            Direction::N => Separation { dx: 0, dy: -1 },
-            Direction::E => Separation { dx: 1, dy: 0 },
-            Direction::S => Separation { dx: 0, dy: 1 },
-            Direction::W => Separation { dx: -1, dy: 0 },
-        }
-    }
-
-    fn turn_right(&self) -> Self {
-        match self {
-            Direction::N => Direction::E,
-            Direction::E => Direction::S,
-            Direction::S => Direction::W,
-            Direction::W => Direction::N,
         }
     }
 }

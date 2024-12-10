@@ -16,7 +16,9 @@ mod dec_06;
 mod dec_07;
 #[allow(dead_code)]
 mod dec_08;
+#[allow(dead_code)]
 mod dec_09;
+mod dec_10;
 
 mod util;
 
@@ -53,7 +55,11 @@ fn main() {
     // println!("Part 1: {}", dec_08::run_first(true));
     // println!("Part 2: {}", dec_08::run_second(true));
 
-    println!("December 9th");
-    println!("Part 1: {}", dec_09::run_first(true));
-    println!("Part 2: {}", dec_09::run_second(true));
+    // println!("December 9th");
+    // println!("Part 1: {}", dec_09::run_first(true));
+    // println!("Part 2: {}", dec_09::run_second(true));
+
+    println!("December 10th");
+    println!("Part 1: {}", dec_10::run_first(true));
+    // println!("Part 2: {}", dec_10::run_second(true));
 }
