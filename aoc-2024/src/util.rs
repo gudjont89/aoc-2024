@@ -47,6 +47,12 @@ impl Position {
         Separation { dx, dy }
     }
 
+    pub fn walk_in_direction(&self, direction: &Direction) -> Option<Position> {
+        let movement = direction.get_movement();
+
+        self.new_position(&movement)
+    }
+
     pub fn new_position(&self, separation: &Separation) -> Option<Position> {
         let x = self.x as i32 + separation.dx;
         let y = self.y as i32 + separation.dy;
@@ -56,6 +62,12 @@ impl Position {
         }
 
         Some(Position { x: x as usize, y: y as usize, })
+    }
+
+    pub fn is_adjacent_to(&self, other: &Position) -> bool {
+        let distance = self.x.abs_diff(other.x) + self.y.abs_diff(other.y);
+
+        distance == 1
     }
 }
 

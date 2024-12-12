@@ -1,4 +1,4 @@
-use std::{collections::HashMap, time::Instant, vec};
+use std::{collections::HashMap, vec};
 
 use itertools::Itertools;
 
