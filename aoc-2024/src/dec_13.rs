@@ -5,13 +5,19 @@ pub fn run_first(is_real: bool) -> usize {
 
     parse_prize_recipes(lines)
         .iter()
-        .filter_map(|pr| pr.get_optimal_attempt())
+        .filter_map(|pr| pr.get_optimal_attempt(0))
         .map(|a| a.tokens())
         .sum()
 }
 
 pub fn run_second(is_real: bool) -> usize {
-    0
+    let lines = read_from_file(is_real, 13, None);
+
+    parse_prize_recipes(lines)
+        .iter()
+        .filter_map(|pr| pr.get_optimal_attempt(10000000000000))
+        .map(|a| a.tokens())
+        .sum()
 }
 
 fn parse_prize_recipes(lines: Vec<String>) -> Vec<PrizeRecipe> {
@@ -66,9 +72,9 @@ struct PrizeRecipe {
 }
 
 impl PrizeRecipe {
-    fn get_optimal_attempt(&self) -> Option<Attempt> {
-        let px = vec![self.a_movement.x, self.b_movement.x, self.prize_position.x];
-        let py = vec![self.a_movement.y, self.b_movement.y, self.prize_position.y];
+    fn get_optimal_attempt(&self, prize_position_shift: usize) -> Option<Attempt> {
+        let px = vec![self.a_movement.x, self.b_movement.x, prize_position_shift + self.prize_position.x];
+        let py = vec![self.a_movement.y, self.b_movement.y, prize_position_shift + self.prize_position.y];
 
         let (a, b) = solve_linear_system(px, py)?;
 
