@@ -69,6 +69,35 @@ impl Position {
 
         distance == 1
     }
+
+    pub fn move_wrapping_around(
+        self, 
+        separation: &Separation, 
+        dimensions: &Dimensions
+    ) -> Self {
+        let mut x = self.x as i32 + separation.dx;
+        let mut y = self.y as i32 + separation.dy;
+
+        x = x.rem_euclid(dimensions.width as i32);
+        y = y.rem_euclid(dimensions.height as i32);
+
+        // if x < 0 {
+        //     x = x + dimensions.width;
+        // } else if x >= dimensions.width {
+        //     x = x - dimensions.width;
+        // }
+
+        // if y < 0 {
+        //     y = y + dimensions.height;
+        // } else if y >= dimensions.height {
+        //     y = y - dime
+        // }
+
+        let x = x as usize;
+        let y = y as usize;
+
+        Position { x, y }
+    }
 }
 
 pub struct Separation {
@@ -79,6 +108,10 @@ pub struct Separation {
 impl Separation {
     pub fn negative(&self) -> Self {
         Separation { dx: -self.dx, dy: -self.dy }
+    }
+
+    pub fn multiply(&self, n: usize) -> Self {
+        Separation { dx: (n as i32) * self.dx, dy: (n as i32) * self.dy }
     }
 }
 
