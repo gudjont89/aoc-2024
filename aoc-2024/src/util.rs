@@ -69,25 +69,6 @@ impl Position {
 
         distance == 1
     }
-
-    pub fn borders_on_side(&self, other: &Position) -> Option<Direction> {
-        if !self.is_adjacent_to(other) {
-            return None;
-        }
-
-        if self.y < other.y {
-            Some(Direction::N)
-        }
-        else if self.x < other.x {
-            Some(Direction::E)
-        }
-        else if self.y > other.y {
-            Some(Direction::S)
-        }
-        else {
-            Some(Direction::W)
-        }
-    }
 }
 
 pub struct Separation {

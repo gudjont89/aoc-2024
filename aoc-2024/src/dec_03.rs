@@ -24,11 +24,15 @@ fn find_multiplications(input_str: &str) -> i32 {
     let rgx = regex::Regex::new(r"mul\((\d+),(\d+)\)").unwrap();
 
     rgx
-        .find_iter(input_str)
-        .map(|m| m.as_str())
-        .map(|s| parse_single_multiplication_string(s).unwrap())
-        .map(|v| v.0 * v.1)
-        .sum()
+        .captures_iter(input_str)
+        .filter_map(|caps| {
+            let (_, [multiplicant_1, multiplicant_2]) = caps.extract();
+            let multiplicant_1 = multiplicant_1.parse::<usize>().ok()?;
+            let multiplicant_2 = multiplicant_2.parse::<usize>().ok()?;
+
+            Some(multiplicant_1 * multiplicant_2)
+        })
+        .sum::<usize>() as i32
 }
 
 fn parse_single_multiplication_string(mul_str: &str) -> Option<(i32, i32)> {
