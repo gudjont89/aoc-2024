@@ -134,6 +134,16 @@ impl Direction {
         }
     }
 
+    pub fn turn_left(&self) -> Self {
+        match self {
+            Direction::N => Direction::W,
+            Direction::E => Direction::N,
+            Direction::S => Direction::E,
+            Direction::W => Direction::S,
+            _ => panic!(""),
+        }
+    }
+
     pub fn turn_right(&self) -> Self {
         match self {
             Direction::N => Direction::E,
@@ -144,6 +154,7 @@ impl Direction {
         }
     }
 
+    // todo: complete
     pub fn reverse(&self) -> Self {
         match self {
             Direction::N => Direction::S,
@@ -152,6 +163,12 @@ impl Direction {
             Direction::W => Direction::E,
             _ => panic!(""),
         }
+    }
+
+    pub fn opposite_to(&self, other: Direction) -> bool {
+        let opposite_direction = self.reverse();
+
+        opposite_direction == other
     }
 
     pub fn get_total_movement(&self, order: usize) -> Separation {
